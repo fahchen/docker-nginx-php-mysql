@@ -1,5 +1,29 @@
 version: '3'
 services:
+  db:
+    image: mysql:5.7.22
+    container_name: db
+    restart: always
+    env_file:
+      - ".env"
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_RANDOM_ROOT_PASSWORD=${MYSQL_RANDOM_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "3306"
+    volumes:
+      - "./data/db/mysql:/var/lib/mysql"
+      - "./web/kaoqin_webuildu.sql:/tmp/kaoqin_webuildu.sql"
+  php:
+    image: nanoninja/php-fpm:${PHP_VERSION}
+    restart: always
+    volumes:
+      - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
+      - "./web:/var/www/html"
+    depends_on:
+      - db
   web:
     image: nginx:alpine
     volumes:
@@ -12,25 +36,4 @@ services:
     restart: always
     depends_on:
       - php
-      - mysql
-  php:
-    image: nanoninja/php-fpm:${PHP_VERSION}
-    restart: always
-    volumes:
-      - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
-      - "./web:/var/www/html"
-  mysql:
-    image: mysql:${MYSQL_VERSION}
-    container_name: ${MYSQL_HOSTNAME}
-    restart: always
-    env_file:
-      - ".env"
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_ONETIME_PASSWORD=${MYSQL_ONETIME_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - "./data/db/mysql:/var/lib/mysql"
+      - db
