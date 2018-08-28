@@ -1,8 +1,8 @@
 version: '3'
 services:
-  db:
+  db_mysql:
     image: mysql:5.7.22
-    container_name: db
+    container_name: db_mysql
     restart: always
     env_file:
       - ".env"
@@ -15,16 +15,15 @@ services:
       - "3306"
     volumes:
       - "./data/db/mysql:/var/lib/mysql"
-      - "./web/kaoqin_webuildu.sql:/tmp/kaoqin_webuildu.sql"
-  php:
+  php_app:
     image: nanoninja/php-fpm:${PHP_VERSION}
     restart: always
     volumes:
       - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
       - "./web:/var/www/html"
     depends_on:
-      - db
-  web:
+      - db_mysql
+  php_web:
     image: nginx:alpine
     volumes:
       - "./etc/nginx/default.conf:/etc/nginx/conf.d/default.conf"
@@ -35,5 +34,5 @@ services:
       - NGINX_HOST=${NGINX_HOST}
     restart: always
     depends_on:
-      - php
-      - db
+      - php_app
+      - db_mysql
