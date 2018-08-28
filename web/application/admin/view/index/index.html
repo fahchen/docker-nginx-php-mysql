@@ -383,7 +383,11 @@
 
     $(document).on('click','#update_data',function () {
         $.get("{:url('index/index/import')}",'',function (res) {
-            console.log(res);
+            if (res =='success'){
+                alert('更新用户数据成功')
+            }else {
+                alert('更新数据失败')
+            }
         })
     })
 </script>

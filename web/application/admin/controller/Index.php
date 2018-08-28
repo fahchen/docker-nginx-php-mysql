@@ -5,11 +5,12 @@ namespace app\admin\controller;
 //use function PHPSTORM_META\type;
 use think\Controller;
 use think\Db;
+use think\Env;
 
 class Index extends Controller {
 
     public function to_work_push(){
-        $url = 'https://beta.skylarkly.com/api/v4/pushes/wechat';//接收地址
+        $url = Env::get('GER_URL').'/api/v4/pushes/wechat';//接收地址
         $date = date('Y-m-d',time());
         $openids = Db::table('users')->alias('u')->field('u.id u_id')->join('attendance a','u.id = a.user_id')->where('is_morning_status','<>',0)->where(['time_day'=>$date])->select();
 //        var_dump($openids);exit;
@@ -28,11 +29,11 @@ class Index extends Controller {
                         'news_entity'=>(object)[
                             "title"=>"考勤打卡",
                             "description"=>"马上上班了,别忘记打卡哦!",
-                            "url"=>"https://beta.skylarkly.com/oauth/authorize?client_id=128e3b3439f7c4743e8f198ee876c1ab3f641143a091d6942f8026865ce64134&redirect_uri=http://kaoqin.webuildus.com/index/index/getuser&response_type=code",
-                            "picurl"=>"http://pajwyszsz.bkt.clouddn.com/92961ddc405ba5e592d350d95445fa59.jpeg"],
+                            'url'=>Env::get('GER_URL').'/oauth/authorize?client_id='.Env::get('GET_USER_CLIENT_ID').'&redirect_uri='.Env::get('GET_USER_REDIRECT_URL').'/index/index/getuser&response_type=code',
+                            "picurl"=>Env::get('SHOW_PIC')],
                         'template_entity'=>(object)[
                             'template_entity'=>'PPa-zE5EyBO1LCaWIWtMYXNVy5AEosufbhdj-5Z-6Fw',
-                            'url'=>'https://beta.skylarkly.com/oauth/authorize?client_id=128e3b3439f7c4743e8f198ee876c1ab3f641143a091d6942f8026865ce64134&redirect_uri=http://kaoqin.webuildus.com/index/index/getuser&response_type=code',
+                            'url'=>Env::get('GER_URL').'/oauth/authorize?client_id='.Env::get('GET_USER_CLIENT_ID').'&redirect_uri='.Env::get('GET_USER_REDIRECT_URL').'/index/index/getuser&response_type=code',
                             'data'=>[
                                 'first'=>[
                                     'value'=>'您好!你有一条考勤打卡提醒',
@@ -58,7 +59,7 @@ class Index extends Controller {
                             ]
                         ]
                     ];
-                    $header = array('Authorization:3d06df76b958483cb6e36d59acfde7ef12a0b3a24587cc1476a776158145043d:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lc3BhY2VfaWQiOjF9.sBNW1M4e1SMYVq4oJhS6qu3rkk7FgzBgkryVK-L5dXA');//定义content-type为xml
+                    $header = array('Authorization:'.Env::get('INTERFACE_SIGNATURE'));//定义content-type为xml
                     $ch = curl_init(); //初始化curl
                     curl_setopt($ch, CURLOPT_URL, $url);//设置链接
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置是否返回信息
@@ -84,11 +85,11 @@ class Index extends Controller {
                         'news_entity'=>(object)[
                             "title"=>"考勤打卡",
                             "description"=>"马上上班了,别忘记打卡哦!",
-                            "url"=>"https://beta.skylarkly.com/oauth/authorize?client_id=128e3b3439f7c4743e8f198ee876c1ab3f641143a091d6942f8026865ce64134&redirect_uri=http://kaoqin.webuildus.com/index/index/getuser&response_type=code",
-                            "picurl"=>"http://pajwyszsz.bkt.clouddn.com/92961ddc405ba5e592d350d95445fa59.jpeg"],
+                            'url'=>Env::get('GER_URL').'/oauth/authorize?client_id='.Env::get('GET_USER_CLIENT_ID').'&redirect_uri='.Env::get('GET_USER_REDIRECT_URL').'/index/index/getuser&response_type=code',
+                            "picurl"=>Env::get('SHOW_PIC')],
                         'template_entity'=>(object)[
                             'template_entity'=>'PPa-zE5EyBO1LCaWIWtMYXNVy5AEosufbhdj-5Z-6Fw',
-                            'url'=>'https://beta.skylarkly.com/oauth/authorize?client_id=128e3b3439f7c4743e8f198ee876c1ab3f641143a091d6942f8026865ce64134&redirect_uri=http://kaoqin.webuildus.com/index/index/getuser&response_type=code',
+                            'url'=>Env::get('GER_URL').'/oauth/authorize?client_id='.Env::get('GET_USER_CLIENT_ID').'&redirect_uri='.Env::get('GET_USER_REDIRECT_URL').'/index/index/getuser&response_type=code',
                             'data'=>[
                                 'first'=>[
                                     'value'=>'您好!你有一条考勤打卡提醒',
@@ -114,7 +115,7 @@ class Index extends Controller {
                             ]
                         ]
                     ];
-                    $header = array('Authorization:3d06df76b958483cb6e36d59acfde7ef12a0b3a24587cc1476a776158145043d:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lc3BhY2VfaWQiOjF9.sBNW1M4e1SMYVq4oJhS6qu3rkk7FgzBgkryVK-L5dXA');//定义content-type为xml
+                    $header = array('Authorization:'.Env::get('INTERFACE_SIGNATURE'));//定义content-type为xml
                     $ch = curl_init(); //初始化curl
                     curl_setopt($ch, CURLOPT_URL, $url);//设置链接
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置是否返回信息
@@ -135,7 +136,7 @@ class Index extends Controller {
     }
 
     public function out_work_push(){
-        $url = 'https://beta.skylarkly.com/api/v4/pushes/wechat';//接收地址
+        $url = Env::get('GER_URL').'/api/v4/pushes/wechat';//接收地址
         $date = date('Y-m-d',time());
         $openids = Db::table('users')->alias('u')->field('u.id u_id')->join('attendance a','u.id = a.user_id')->where('is_afternoon_status','<>',0)->where(['time_day'=>$date])->select();
 //        var_dump($openids);exit;
@@ -155,11 +156,11 @@ class Index extends Controller {
                         'news_entity'=>(object)[
                             "title"=>"考勤打卡",
                             "description"=>"马上下班了,别忘记打卡哦!",
-                            "url"=>"https://beta.skylarkly.com/oauth/authorize?client_id=128e3b3439f7c4743e8f198ee876c1ab3f641143a091d6942f8026865ce64134&redirect_uri=http://kaoqin.webuildus.com/index/index/getuser&response_type=code",
-                            "picurl"=>""],
+                            'url'=>Env::get('GER_URL').'/oauth/authorize?client_id='.Env::get('GET_USER_CLIENT_ID').'&redirect_uri='.Env::get('GET_USER_REDIRECT_URL').'/index/index/getuser&response_type=code',
+                            "picurl"=>Env::get('SHOW_PIC')],
                         'template_entity'=>(object)[
                             'template_entity'=>'PPa-zE5EyBO1LCaWIWtMYXNVy5AEosufbhdj-5Z-6Fw',
-                            'url'=>'https://beta.skylarkly.com/oauth/authorize?client_id=128e3b3439f7c4743e8f198ee876c1ab3f641143a091d6942f8026865ce64134&redirect_uri=http://kaoqin.webuildus.com/index/index/getuser&response_type=code',
+                            'url'=>Env::get('GER_URL').'/oauth/authorize?client_id='.Env::get('GET_USER_CLIENT_ID').'&redirect_uri='.Env::get('GET_USER_REDIRECT_URL').'/index/index/getuser&response_type=code',
                             'data'=>[
                                 'first'=>[
                                     'value'=>'您好!你有一条考勤打卡提醒',
@@ -185,7 +186,7 @@ class Index extends Controller {
                             ]
                         ]
                     ];
-                    $header = array('Authorization:3d06df76b958483cb6e36d59acfde7ef12a0b3a24587cc1476a776158145043d:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lc3BhY2VfaWQiOjF9.sBNW1M4e1SMYVq4oJhS6qu3rkk7FgzBgkryVK-L5dXA');//定义content-type为xml
+                    $header = array('Authorization:'.Env::get('INTERFACE_SIGNATURE'));//定义content-type为xml
                     $ch = curl_init(); //初始化curl
                     curl_setopt($ch, CURLOPT_URL, $url);//设置链接
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置是否返回信息
@@ -210,11 +211,11 @@ class Index extends Controller {
                         'news_entity'=>(object)[
                             "title"=>"考勤打卡",
                             "description"=>"马上下班了,别忘记打卡哦!",
-                            "url"=>"https://beta.skylarkly.com/oauth/authorize?client_id=128e3b3439f7c4743e8f198ee876c1ab3f641143a091d6942f8026865ce64134&redirect_uri=http://kaoqin.webuildus.com/index/index/getuser&response_type=code",
-                            "picurl"=>""],
+                            'url'=>Env::get('GER_URL').'/oauth/authorize?client_id='.Env::get('GET_USER_CLIENT_ID').'&redirect_uri='.Env::get('GET_USER_REDIRECT_URL').'/index/index/getuser&response_type=code',
+                            "picurl"=>Env::get('SHOW_PIC')],
                         'template_entity'=>(object)[
                             'template_entity'=>'PPa-zE5EyBO1LCaWIWtMYXNVy5AEosufbhdj-5Z-6Fw',
-                            'url'=>'https://beta.skylarkly.com/oauth/authorize?client_id=128e3b3439f7c4743e8f198ee876c1ab3f641143a091d6942f8026865ce64134&redirect_uri=http://kaoqin.webuildus.com/index/index/getuser&response_type=code',
+                            'url'=>Env::get('GER_URL').'/oauth/authorize?client_id='.Env::get('GET_USER_CLIENT_ID').'&redirect_uri='.Env::get('GET_USER_REDIRECT_URL').'/index/index/getuser&response_type=code',
                             'data'=>[
                                 'first'=>[
                                     'value'=>'您好!你有一条考勤打卡提醒',
@@ -240,7 +241,7 @@ class Index extends Controller {
                             ]
                         ]
                     ];
-                    $header = array('Authorization:3d06df76b958483cb6e36d59acfde7ef12a0b3a24587cc1476a776158145043d:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lc3BhY2VfaWQiOjF9.sBNW1M4e1SMYVq4oJhS6qu3rkk7FgzBgkryVK-L5dXA');//定义content-type为xml
+                    $header = array('Authorization:'.Env::get('INTERFACE_SIGNATURE'));//定义content-type为xml
                     $ch = curl_init(); //初始化curl
                     curl_setopt($ch, CURLOPT_URL, $url);//设置链接
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置是否返回信息
@@ -261,7 +262,7 @@ class Index extends Controller {
     public function getOauth(){
         $code = $_GET['code'];
 //        var_dump($code);exit;
-        $url = 'http://117.48.200.115:8080/api/token';//接收地址
+        $url = Env::get('XD_URL').'/api/token';//接收地址
 
 //        $header ["Content-type"]= "application/x-www-form-urlencoded";
         $ch = curl_init(); //初始化curl
@@ -269,7 +270,7 @@ class Index extends Controller {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置是否返回信息
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));//设置HTTP头
         curl_setopt($ch, CURLOPT_POST, true);//设置为POST方式
-        curl_setopt($ch, CURLOPT_POSTFIELDS, 'grant_type=authorization_code&client_id=app05028472-bc11-4b8f-bd37-b2613fdc1cc9&client_secret=c56d0e9a7ccec67b4ea131655038d604&code='.$code.'&redirect_uri=http://kaoqin.webuildus.com/admin/index/getOauth');//POST数据
+        curl_setopt($ch, CURLOPT_POSTFIELDS, 'grant_type=authorization_code&client_id='.Env::get('XD_CLIENT_ID').'&client_secret='.Env::get('XD_CLIENT_SECRET').'&code='.$code.'&redirect_uri='.Env::get('GET_USER_REDIRECT_URL').'/admin/index/getOauth');//POST数据
 //        var_dump($ch);exit;
         $response = curl_exec($ch);//接收返回信息
         if(curl_errno($ch)){//出错则显示错误信息
@@ -281,7 +282,7 @@ class Index extends Controller {
 //        var_dump($response);exit;
 //        echo $token;exit;
         //获取用户信息
-        $url = 'http://117.48.200.115:8080/api/userDetail?access_token='.$token;//接收地址
+        $url =Env::get('XD_URL').'/api/userDetail?access_token='.$token;//接收地址
 
 //        $header = 'Authorization:3d06df76b958483cb6e36d59acfde7ef12a0b3a24587cc1476a776158145043d:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lc3BhY2VfaWQiOjF9.sBNW1M4e1SMYVq4oJhS6qu3rkk7FgzBgkryVK-L5dXA';//定义content-type为xml
         $ch = curl_init(); //初始化curl
